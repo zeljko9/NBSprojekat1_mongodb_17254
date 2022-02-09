@@ -17,7 +17,7 @@ class Database():
 
     def insertUser(self, user, password):
         if len(list(self.users.find({'user':user})))==0:
-            self.users.insert_one({'user':user, 'password':password, 'asked':{}})
+            self.users.insert_one({'user':user, 'password':password, 'asked':[]})
             return True
         else:
             return False
@@ -30,7 +30,7 @@ class Database():
 
     def insertPhoto(self, user, imgsrc):
         if len(list(self.photos.find({'src':imgsrc})))==0:
-            self.photos.inser_one({'users':[user], 'src':imgsrc})
+            self.photos.insert_one({'users':[user], 'src':imgsrc})
             return True
         else:
             return False
@@ -65,3 +65,12 @@ class Database():
             return True
         else:
             return False
+
+    def returnRequests(self, user):
+        if len(list(self.users.find({'user':user})))!=0:
+            req=list()
+            for u in self.users.find_one({'user':user})['asked']:
+                req.append(u)
+            return (True, req)
+        else:
+            return (False, None)

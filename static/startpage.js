@@ -57,7 +57,7 @@ export class Startpage{
             .then(response=>response.json())
             .then(data => {
                 if(data["status"]=="ok"){
-                    const n = new User(in1.value, data["my_photos"]);
+                    const n = new User(in1.value, data["my_photos"], data["share_req"]);
                     n.drawUser(document.body);
                 }else{
                     alert("Pogresni podaci, ili korisnik ne postoji, molimo vas pokusajte ponovo!");
@@ -112,7 +112,7 @@ export class Startpage{
             .then(response=>response.json())
             .then(data => {
                 if(data["status"]=="ok"){
-                    const n = new User(in3.value, []);
+                    const n = new User(in3.value, [], []);
                     n.drawUser(document.body);
                 }else{
                     alert("Korisnik vec postoji, pokusajte ponovo!");
@@ -129,6 +129,5 @@ export class Startpage{
         this.kontejner.appendChild(regform);
 
         host.appendChild(this.kontejner);
-        
     }
 }

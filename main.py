@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import threading
 from database import Database
 
@@ -17,12 +17,14 @@ def main():
 
 
 @app.route('/login', methods=['POST'])
+@cross_origin()
 def login():
     msg=flask.request.json
     dct=dict()
     if db.returnUser(msg['username'], msg['password']):
         dct['my_photos']=db.returnUserPhotos(msg['username'])[1]
         dct['status']='ok'
+        dct['share_req']=db.returnRequests(msg['username'])[1]
         response= app.response_class(
         response=flask.json.dumps(dct))
     else:
@@ -33,6 +35,7 @@ def login():
     return response
 
 @app.route('/register', methods=['POST'])
+@cross_origin()
 def register():
     msg=flask.request.json
     dct=dict()
@@ -48,6 +51,7 @@ def register():
     return response
 
 @app.route('/insertPhoto', methods=['POST'])
+@cross_origin()
 def insertPhoto():
     msg=flask.request.json
     dct=dict()
@@ -64,6 +68,7 @@ def insertPhoto():
 
 
 @app.route('/askForPhoto', methods=['POST'])
+@cross_origin()
 def askForPhoto():
     msg=flask.request.json
     dct=dict()
@@ -79,6 +84,7 @@ def askForPhoto():
     return response
 
 @app.route('/allPhotos', methods=['POST'])
+@cross_origin()
 def allPhotos():
     imgs=db.returnAllPhotos()
     response= app.response_class(
