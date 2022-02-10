@@ -11,5 +11,4 @@ dve kolekcije u 'database':
     c) zahtevi za prenos slika
 
 TODO:
-1. kreiraj pretragu (prikaz svih slika i forma za zahtev slike)
-2. proveri rad odobrenja zahteva za prenos slike ko user-a
+--

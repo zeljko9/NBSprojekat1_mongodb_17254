@@ -36,8 +36,8 @@ class Database():
             return False
 
     def addUserPhoto(self, user, imgsrc):
-        if len(list(self.photos.find({'src':imgsrc}).count()!=0 and self.photos.find({'src':imgsrc, 'users':user})))==0:
-            self.photos.update({'src':imgsrc}, {'$push':{'users':user}})
+        if len(list(self.photos.find({'src':imgsrc})!=0 and self.photos.find({'src':imgsrc, 'users':user})))==0:
+            self.photos.update_one({'src':imgsrc}, {'$push':{'users':user}})
             return True
         else:
             return False
@@ -61,8 +61,9 @@ class Database():
     def requestPhoto(self, user, imgsrc):
         if len(list(self.photos.find({'src':imgsrc})))!=0:
             for u in self.photos.find_one({'src':imgsrc})['users']:
-                self.users.update({'user':u}, {'$push':{'asked':{'usr':user, 'img':imgsrc}}})
-            return True
+                if u!=user:
+                    self.users.update_one({'user':u}, {'$push':{'asked':{'usr':user, 'img':imgsrc}}})
+                    return True
         else:
             return False
 
@@ -74,3 +75,10 @@ class Database():
             return (True, req)
         else:
             return (False, None)
+
+    def approveSharing(self, userS, userR, img):
+        if self.addUserPhoto(userR, img):
+            self.users.update_one({'user':userS}, {'$pull':{'asked':{'usr':userR, 'img':img}}})
+            return True
+        else:
+            return False

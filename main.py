@@ -83,12 +83,28 @@ def askForPhoto():
 
     return response
 
-@app.route('/allPhotos', methods=['POST'])
+@app.route('/allPhotos', methods=['GET'])
 @cross_origin()
 def allPhotos():
     imgs=db.returnAllPhotos()
     response= app.response_class(
     response=flask.json.dumps(imgs))
+    return response
+
+@app.route('/approveSharing', methods=['POST'])
+@cross_origin()
+def approveSharing():
+    msg=flask.request.json
+    dct=dict()
+    if db.approveSharing(msg['usernameS'], msg['usernameR'], msg['imgsrc']):
+        dct['status']='ok'
+        response= app.response_class(
+        response=flask.json.dumps(dct))
+    else:
+        dct['status']='not ok'
+        response= app.response_class(
+        response=flask.json.dumps(dct))
+    
     return response
 
 if __name__ == "__main__":
